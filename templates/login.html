@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+<div>
+  <H1>Login</H1>
+</div>
+<div>
+  <form method="post">
+    <fieldset>
+      <legend>Login</legend>
+      <div>
+        <label for="username">User name</label>
+        <input type='text' id='username' name='username'>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type='password' id='password' name='password'>
+      </div>
+      <div>
+        <button type='submit'>Login</button>
+      </div>
+    </fieldset>
+    {% module xsrf_form_html() %}
+  </form>
+</div>
+{% end %}

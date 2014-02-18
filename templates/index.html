@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+{% if flash.data %}
+<div class="{{ flash.data["class"] }}">
+  {{ flash.data["msg"] }}
+</div>
+{% end %}
+<div>
+  <H1>MyBlog</H1>
+</div>
+{% end %}
+

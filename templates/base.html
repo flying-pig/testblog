@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<HTML  xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>{{ escape(handler.settings["title"]) }}</title>
+    {% block head %}{% end %}
+  </head>
+  <body>
+    {% include "header.html" %}
+    <div class="container">
+      {% block body %}{% end %}
+      {% include "footer.html" %}
+    </div>
+    
+  </body>
+</HTML>

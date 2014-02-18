@@ -1,0 +1,56 @@
+Hey Joe, maybe you have different requirements than me, but I've found a
+simple way to do this would just be extending tornado.web.RequestHandler with
+set_flash_alerts and get_flash_alerts functions. You can even override the
+default render method to automatically inject them into the kwargs for
+RequestHandler's request.. so something along these lines:
+class BaseHandler(tornado.web.RequestHandler):
+  #this allows you to access alerts in a unified manner
+  #without relying on server side sessions        
+  def get_flash_alerts(self):
+    alerts = self.get_secure_cookie(options.cookie_alerts)
+  try:
+    alerts = pickle.loads(alerts)
+    self.clear_cookie(options.cookie_alerts)
+    return alerts
+  except:
+    return None
+  #override the default render method to
+    inject in the flash alerts,
+  #or other properties        
+  def render(self, *args, **kwargs):
+    flash_alerts = self.get_flash_alerts()
+    if 'alerts' not in kwargs:
+      kwargs['alerts'] = flash_alerts
+    elif flash_alerts is not None:
+      kwargs['alerts'].extend(flash_alerts)
+    tornado.web.RequestHandler.render(self, *args, **kwargs)
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+tornado_flash:
+I needed some basic flash functionality for a site I'm working on, so I put
+this together.
+
+https://github.com/joerussbowman/tornado_flash
+
+Flash functionality are messages that are shown once, the next page load after
+a user takes an action. For example a "Thanks for logging in!" message after
+the user has logged in.
+
+The approach I took was to have the data be json encoded, so you can store
+basic objects. In my case, using Twitter Bootstrap I am doing something like
+{"class": "success", "msg": "Thanks for logging in!"} and then plugging this
+in the top of my base template.
+
+{% if flash.data %}
+  <div class="alert-message block-message {{ flash.data["class"] }} fade in" data-alert="alert">
+    <a class="close" href="#">&times;</a>
+    {{ flash.data["msg"] }}
+  </div>
+{% end %}
+
+
+I'll work up a proper demo for the
+library when I have more time. It's
+apache licensed, hope someone else
+finds this useful and time saving.
